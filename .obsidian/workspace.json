@@ -1,0 +1,196 @@
+{
+  "main": {
+    "id": "f7465666eeff475a",
+    "type": "split",
+    "children": [
+      {
+        "id": "e2a2467ba3b90eaf",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8cd0ea901d324668",
+            "type": "leaf",
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "Systeme_console.canvas",
+                "viewState": {
+                  "x": 881.6222448950866,
+                  "y": 777.3054200664013,
+                  "zoom": -1.5
+                }
+              },
+              "icon": "lucide-layout-dashboard",
+              "title": "Systeme_console"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b5f2f3cc009387ba",
+    "type": "split",
+    "children": [
+      {
+        "id": "48bd9ed14e5d51ef",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "102d5dca963914b3",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorateur de fichiers"
+            }
+          },
+          {
+            "id": "b115621421c04b2d",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Rechercher"
+            }
+          },
+          {
+            "id": "9f68270883e00a95",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Signet"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "91e01274769b2b77",
+    "type": "split",
+    "children": [
+      {
+        "id": "009693a8bad7bdcb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "dc954b23259cd947",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Systeme_console.canvas",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Rétrolien pour Systeme_console"
+            }
+          },
+          {
+            "id": "dd15d33285f39da5",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Systeme_console.canvas",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Liens sortants de Systeme_console"
+            }
+          },
+          {
+            "id": "3075edcab3ebc677",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Mots-clés"
+            }
+          },
+          {
+            "id": "2098a916f64098d6",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Systeme_console.canvas",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Plan de Systeme_console"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Ouvrir le sélecteur rapide": false,
+      "graph:Ouvrir la vue graphique": false,
+      "canvas:Créer une nouvelle toile": false,
+      "daily-notes:Ouvrir la note quotidienne": false,
+      "templates:Insérer le modèle": false,
+      "command-palette:Ouvrir la palette de commandes": false
+    }
+  },
+  "active": "8cd0ea901d324668",
+  "lastOpenFiles": [
+    "BOM_manager/start_server.sh",
+    "BOM_manager/BOM_manager_functional.html",
+    "BOM_manager/BOM_manager_2.html",
+    "BOM_manager/BOM_manager_1.html",
+    "BOM_manager/BOM_manager.html",
+    "BOM_manager/test_bom_manager.html",
+    "BOM_manager",
+    "schema/Untitled diagram _ Mermaid Chart-2025-07-26-120425.mmd",
+    "schema/console_symbiote/console_symbiote-backups/console_symbiote-2025-07-26_121247.zip",
+    "schema/console_symbiote/console_symbiote-backups",
+    "schema/console_symbiote/bloc_alimentation.kicad_sch",
+    "DOCS/images/Power_supply.png",
+    "DOCS/Power_supply.png",
+    "DOCS/Untitled diagram _ Mermaid Chart-2025-07-26-084921.png",
+    "Untitled diagram _ Mermaid Chart-2025-07-26-084921.png",
+    "Systeme_console.canvas",
+    "DOCS/PINOUT.md",
+    "Sans titre.md",
+    "DOCS/README.md"
+  ]
+}

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symbiote BOM Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #18181B;
+            color: #E4E4E7;
+        }
+        
+        .card {
+            background-color: #27272A;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .btn-primary {
+            background-color: #4ADE80;
+            color: #18181B;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .btn-primary:hover {
+            background-color: #22C55E;
+            transform: translateY(-1px);
+        }
+        
+        .btn-danger {
+            background-color: #F87171;
+            color: #18181B;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .btn-danger:hover {
+            background-color: #EF4444;
+        }
+        
+        .btn-secondary {
+            background-color: #3F3F46;
+            color: #E4E4E7;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #52525B;
+        }
+        
+        .input-field {
+            background-color: #3F3F46;
+            border: 1px solid #52525B;
+            color: #E4E4E7;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #4ADE80;
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+        }
+        
+        .table-row {
+            transition: all 0.2s ease-in-out;
+            border-bottom: 1px solid #3F3F46;
+        }
+        
+        .table-row:hover {
+            background-color: #3F3F46;
+        }
+        
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal-content {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .scrollbar-thin {
+            scrollbar-width: thin;
+            scrollbar-color: #52525B transparent;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background-color: #52525B;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 bg-[#18181B] border-b border-[#3F3F46] px-6 py-4 z-10">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-[#E4E4E7]">Symbiote BOM Manager</h1>
+            <button id="add-component-btn" class="btn-primary px-4 py-2 rounded-md font-medium flex items-center gap-2">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                Ajouter un composant
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-20 px-6 pb-6">
+        <!-- Control Panel -->
+        <div class="card mb-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <label for="quantity" class="block text-sm font-medium text-[#A1A1AA] mb-2">Quantité à produire</label>
+                    <input type="number" id="quantity" value="1" min="1" class="input-field w-32 px-3 py-2 rounded-md">
+                </div>
+                <div class="text-right">
+                    <p class="text-sm font-medium text-[#A1A1AA] mb-2">Coût total estimé</p>
+                    <p class="text-3xl font-bold text-[#4ADE80]">
+                        <span id="total-cost-value">0.00</span> €
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOM Table -->
+        <div class="card">
+            <div class="overflow-x-auto">
+                <table id="bom-table" class="w-full">
+                    <thead>
+                        <tr class="border-b border-[#3F3F46]">
+                            <th class="text-left py-3 px-4 font-medium text-[#A1A1AA]">Référence</th>
+                            <th class="text-left py-3 px-4 font-medium text-[#A1A1AA]">Description</th>
+                            <th class="text-left py-3 px-4 font-medium text-[#A1A1AA]">Qté/Unité</th>
+                            <th class="text-left py-3 px-4 font-medium text-[#A1A1AA]">Prix/Unité (€)</th>
+                            <th class="text-left py-3 px-4 font-medium text-[#A1A1AA]">Coût Ligne (€)</th>
+                            <th class="text-left py-3 px-4 font-medium text-[#A1A1AA]">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bom-table-body" class="divide-y divide-[#3F3F46]">
+                        <!-- Les composants seront ajoutés ici dynamiquement -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="border-t-2 border-[#3F3F46]">
+                            <td colspan="4" class="py-3 px-4 font-medium text-[#A1A1AA]">Coût total par unité</td>
+                            <td class="py-3 px-4 font-bold text-[#E4E4E7]">
+                                <span id="bom-unit-cost">0.00</span> €
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="component-modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-backdrop absolute inset-0"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="modal-content bg-[#27272A] rounded-lg shadow-xl w-full max-w-md">
+                <div class="p-6">
+                    <h2 id="modal-title" class="text-xl font-semibold text-[#E4E4E7] mb-4">Ajouter un composant</h2>
+                    <form id="component-form" class="space-y-4">
+                        <input type="hidden" id="component-id">
+                        <div>
+                            <label for="reference" class="block text-sm font-medium text-[#A1A1AA] mb-1">Référence</label>
+                            <input type="text" id="reference" required class="input-field w-full px-3 py-2 rounded-md">
+                        </div>
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-[#A1A1AA] mb-1">Description</label>
+                            <input type="text" id="description" required class="input-field w-full px-3 py-2 rounded-md">
+                        </div>
+                        <div>
+                            <label for="quantity-input" class="block text-sm font-medium text-[#A1A1AA] mb-1">Quantité</label>
+                            <input type="number" id="quantity-input" min="1" value="1" required class="input-field w-full px-3 py-2 rounded-md">
+                        </div>
+                        <div>
+                            <label for="supplier" class="block text-sm font-medium text-[#A1A1AA] mb-1">Fournisseur</label>
+                            <input type="text" id="supplier" required class="input-field w-full px-3 py-2 rounded-md">
+                        </div>
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-[#A1A1AA] mb-1">Prix Unitaire (€)</label>
+                            <input type="number" id="price" step="0.01" min="0" required class="input-field w-full px-3 py-2 rounded-md">
+                        </div>
+                        <div>
+                            <label for="link" class="block text-sm font-medium text-[#A1A1AA] mb-1">Lien</label>
+                            <input type="url" id="link" placeholder="https://" class="input-field w-full px-3 py-2 rounded-md">
+                        </div>
+                        <div class="flex gap-3 pt-4">
+                            <button type="submit" class="btn-primary px-4 py-2 rounded-md font-medium flex-1">Enregistrer</button>
+                            <button type="button" id="cancel-btn" class="btn-secondary px-4 py-2 rounded-md font-medium flex-1">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialiser les icônes
+        lucide.createIcons();
+
+        // Gestion de la modale
+        const modal = document.getElementById('component-modal');
+        const addBtn = document.getElementById('add-component-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const form = document.getElementById('component-form');
+        const modalTitle = document.getElementById('modal-title');
+
+        addBtn.addEventListener('click', () => {
+            modalTitle.textContent = 'Ajouter un composant';
+            form.reset();
+            document.getElementById('component-id').value = '';
+            modal.classList.remove('hidden');
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // Fermer la modale en cliquant sur le fond
+        modal.querySelector('.modal-backdrop').addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // Empêcher la fermeture en cliquant sur le contenu
+        modal.querySelector('.modal-content').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Gestion du formulaire
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // La logique de soumission sera gérée par Gemini
+            modal.classList.add('hidden');
+        });
+
+        // Mise à jour du coût total
+        const quantity = document.getElementById('quantity');
+        quantity.addEventListener('input', updateTotalCost);
+
+        function updateTotalCost() {
+            // La logique de calcul sera gérée par Gemini
+        }
+    </script>
+</body>
+</html>

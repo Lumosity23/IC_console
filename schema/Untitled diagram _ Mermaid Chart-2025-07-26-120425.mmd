@@ -1,0 +1,28 @@
+flowchart TD
+    subgraph "A. Alimentation & Gestion"
+        A1[USB-C In] --> A2{PMIC MCP73871}
+        A3[Batterie 2P 18650] <--> A2
+        A2 -- "V_SYS (brut)" --> A4[Buck-Boost 3.3V]
+        A2 -- "V_SYS (brut)" --> A5[Boost 5V]
+        A4 --> P1[Rail +3V3]
+        A5 --> P2[Rail +5V]
+    end
+
+    subgraph "B. Cerveau & Logique"
+        B1(MCU: ESP32-S3)
+        P1 --> B1
+    end
+
+    subgraph "C. Interfaces Utilisateur"
+        C1[Écran LCD Principal] <-->|SPI| B1
+        C2[Joystick & Boutons] -->|GPIO/ADC| B1
+        C3[Haut-parleur] <-->|I2S| B1
+        C4[LED de Statut RGB] <-->|GPIO| B1
+    end
+
+    subgraph "D. Communication"
+        D1[Connecteur Magnétique 6-pin] <-->|SPI Maître| B1
+        P1 --> D1
+        P2 --> D1
+        B1 <-->|USB Natif| A1
+    end

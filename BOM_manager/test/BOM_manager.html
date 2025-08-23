@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symbiote BOM Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#18181B',
+                        panelBg: '#27272A',
+                        accent: '#4ADE80',
+                        danger: '#F87171',
+                        textPrimary: '#E4E4E7',
+                        textSecondary: '#A1A1AA'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #18181B;
+            color: #E4E4E7;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .card {
+            background-color: #27272A;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .btn-primary {
+            background-color: #4ADE80;
+            color: #18181B;
+        }
+        
+        .btn-primary:hover {
+            background-color: #22c55e;
+        }
+        
+        .btn-danger {
+            background-color: #F87171;
+        }
+        
+        .btn-danger:hover {
+            background-color: #ef4444;
+        }
+        
+        .btn-secondary {
+            background-color: #3f3f46;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #52525b;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: #3f3f46;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            color: #E4E4E7;
+        }
+        
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #3f3f46;
+        }
+        
+        tr:hover td {
+            background-color: #3f3f46;
+        }
+        
+        input, select {
+            background-color: #3f3f46;
+            border: 1px solid #52525b;
+            color: #E4E4E7;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4ADE80;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #27272A;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-darkBg shadow-lg z-50 flex items-center justify-between px-6">
+        <h1 class="text-xl font-bold">Symbiote BOM Manager</h1>
+        <button id="add-component-btn" class="btn-primary flex items-center gap-2 px-4 py-2 rounded-md font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+            </svg>
+            Ajouter un composant
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-20 pb-8 px-6">
+        <!-- Control Panel -->
+        <div class="card p-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div class="flex flex-col">
+                <label for="quantity" class="text-textSecondary mb-2">Quantité à produire</label>
+                <input type="number" id="quantity" min="1" value="1" class="w-32">
+            </div>
+            <div class="text-right">
+                <p class="text-textSecondary">Coût total estimé</p>
+                <p id="total-cost-value" class="text-2xl font-bold text-accent">€0.00</p>
+            </div>
+        </div>
+
+        <!-- Components Table -->
+        <div class="card overflow-hidden">
+            <table id="bom-table">
+                <thead>
+                    <tr>
+                        <th>Référence</th>
+                        <th>Description</th>
+                        <th>Qté/Unité</th>
+                        <th>Prix/Unité (€)</th>
+                        <th>Coût Ligne (€)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bom-table-body">
+                    <!-- Rows will be added here by JavaScript -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-right font-medium">Coût total par unité</td>
+                        <td id="bom-unit-cost" class="font-bold">€0.00</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="component-modal" class="modal">
+        <div class="modal-content p-6 relative">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-title" class="text-xl font-bold mb-4">Ajouter un composant</h2>
+            <form id="component-form">
+                <input type="hidden" id="component-id">
+                <div class="mb-4">
+                    <label for="reference" class="block text-textSecondary mb-2">Référence</label>
+                    <input type="text" id="reference" required class="w-full">
+                </div>
+                <div class="mb-4">
+                    <label for="description" class="block text-textSecondary mb-2">Description</label>
+                    <input type="text" id="description" required class="w-full">
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="qty" class="block text-textSecondary mb-2">Quantité</label>
+                        <input type="number" id="qty" min="0.001" step="0.001" required class="w-full">
+                    </div>
+                    <div>
+                        <label for="price" class="block text-textSecondary mb-2">Prix Unitaire (€)</label>
+                        <input type="number" id="price" min="0" step="0.01" required class="w-full">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="supplier" class="block text-textSecondary mb-2">Fournisseur</label>
+                    <input type="text" id="supplier" class="w-full">
+                </div>
+                <div class="mb-6">
+                    <label for="link" class="block text-textSecondary mb-2">Lien</label>
+                    <input type="url" id="link" class="w-full">
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button type="button" class="btn-secondary px-4 py-2 rounded-md">Annuler</button>
+                    <button type="submit" class="btn-primary px-4 py-2 rounded-md font-medium">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Simple JavaScript to demonstrate interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('component-modal');
+            const openModalBtn = document.getElementById('add-component-btn');
+            const closeModalBtn = document.querySelector('.close-modal');
+            const cancelBtn = document.querySelector('.btn-secondary');
+            
+            openModalBtn.addEventListener('click', () => {
+                document.getElementById('modal-title').textContent = 'Ajouter un composant';
+                document.getElementById('component-form').reset();
+                document.getElementById('component-id').value = '';
+                modal.style.display = 'flex';
+            });
+            
+            closeModalBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+            
+            cancelBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
