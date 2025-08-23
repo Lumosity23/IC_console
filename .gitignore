@@ -1,0 +1,42 @@
+# Obsidian files
+.obsidian/
+*.canvas
+
+# KiCad backup files
+*-backups/
+*.bak
+
+# Operating System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Editor configuration
+.vscode/
+*.swp
+*.swo
+
+# Build artifacts
+build/
+dist/
+
+# Log files
+*.log
+
+# Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDE files
+.idea/
+*.iml
