@@ -1,0 +1,141 @@
+graph TD
+
+%% Console Hôte
+
+subgraph Alimentation["Alimentation & Gestion"]
+
+USB["+5V USB"] --> PMIC[MCP73871]
+
+BAT[V_BATT] --> PMIC
+
+PMIC --> V_SYS[V_SYS]
+
+V_SYS --> SW[SW_POWER]
+
+SW --> SYS_SW[V_SYS_SW]
+
+SYS_SW --> BB[Buck-Boost]
+
+BB --> V33["+3V3"]
+
+SYS_SW --> BST[Boost]
+
+BST --> V5["+5V"]
+
+end
+
+subgraph CPU["Cerveau & Logique"]
+
+ESP[ESP32-S3-WROOM-1]
+
+USB -.->|"USB_D+/D-"| ESP
+
+end
+
+subgraph Display["Interfaces Visuelles & Audio"]
+
+LCD["LCD 3.5\"]
+
+ESP -->|"SPI"| LCD
+
+AMP[MAX98357A]
+
+ESP -->|"I2S"| AMP
+
+LED[WS2812B]
+
+ESP -->|"GPIO"| LED
+
+end
+
+subgraph Controls["Contrôles & Communication"]
+
+JOY[Joystick Analogique]
+
+ESP -->|"ADC x2"| JOY
+
+BP[Boutons Poussoirs]
+
+ESP -->|"GPIO"| BP
+
+MAG[Connecteur Magnétique 6-pin]
+
+ESP -->|"SPI Master"| MAG
+
+V5 -->|"Power"| MAG
+
+end
+
+%% Cartouche Intelligente
+
+subgraph Cartouche["Cartouche Intelligente"]
+
+subgraph CartPower["Alimentation & Gestion"]
+
+CONSOLE["+5V_CONSOLE"] --> CartPMIC[MCP73871]
+
+USB_CART["+5V_USB"] --> CartPMIC
+
+BAT_CART[V_BATT_CART] --> CartPMIC
+
+CartPMIC --> CartSYS[V_SYS_CART]
+
+CartSYS --> CartREG[LDO/Buck-Boost]
+
+CartREG --> CartV33["+3V3_CART"]
+
+end
+
+subgraph CartCPU["Cerveau & Logique"]
+
+ESP_C3[ESP32-C3-MINI-1]
+
+USB_CART -.->|"USB_D+/D-"| ESP_C3
+
+end
+
+subgraph CartFunc["Fonctionnalités & Communication"]
+
+OLED["Écran OLED 1.3\"]
+
+ESP_C3 -->|"I2C"| OLED
+
+SD["Lecteur MicroSD"]
+
+ESP_C3 -->|"SPI CS_SD"| SD
+
+BUZ[Buzzer Piezo]
+
+ESP_C3 -->|"GPIO PWM"| BUZ
+
+CartMAG[Connecteur Magnétique 6-pin]
+
+ESP_C3 -->|"SPI CS_CONSOLE"| CartMAG
+
+end
+
+end
+
+%% Connexion Console-Cartouche
+
+MAG -->|"SPI"| CartMAG
+
+V5 -->|"Power"| CartMAG
+
+%% Styling
+
+classDef power fill:#ff9999,stroke:#ff0000,color:#000000
+
+classDef cpu fill:#99ff99,stroke:#00ff00,color:#000000
+
+classDef interface fill:#9999ff,stroke:#0000ff,color:#000000
+
+classDef control fill:#ffff99,stroke:#ffff00,color:#000000
+
+class USB,BAT,V_SYS,V_SYS_SW,V33,V5,CONSOLE,USB_CART,BAT_CART,CartSYS,CartV33 power
+
+class ESP,ESP_C3 cpu
+
+class LCD,AMP,LED,OLED,SD,BUZ interface
+
+class JOY,BP,MAG,CartMAG control

@@ -1,0 +1,30 @@
+graph TD
+    subgraph "Source d'énergie"
+        A[USB-C +5V]
+        B[Batterie 3.0-4.2V]
+    end
+
+    subgraph "Gestion d'Alimentation (PMIC)"
+        C{MCP73871}
+        A -- "Entrée 5V" --> C
+        B -- "Connexion Batterie" --> C
+    end
+
+    subgraph "Régulation"
+        D[Régulateur Buck-Boost 3.3V]
+        E[Régulateur Boost 5V Optional]
+    end
+
+    subgraph "Sorties de Tension"
+        F[Alim +3V3 Système]
+        G[Alim +5V Cartouche]
+    end
+
+    C -- "Sortie Système (VSYS)" --> D
+    C -- "Charge la batterie" --> B
+
+    D --> F
+
+    %% Option pour le 5V
+    C -- "Sortie Système (VSYS)" --> E
+    E --> G

@@ -1,0 +1,48 @@
+graph TD
+
+subgraph "A. Alimentation & Gestion (Autonome)"
+
+%% Entrées d'énergie multiples
+
+A1[Depuis Console: +5V via Connecteur] --> A3{PMIC MCP73871 ou similaire};
+
+A2[Depuis USB-C Cartouche: +5V] --> A3;
+
+A4[Batterie Interne LiPo] <--> A3;
+
+A3 -- "V_SYS (brut)" --> A5[Buck-Boost 3.3V];
+
+A5 --> P1[Rail +3V3 INTERNE];
+
+end
+
+  
+
+subgraph "B. Cerveau & Logique"
+
+B1(MCU: ESP32-C3);
+
+P1 -- "Alim 3.3V" --> B1;
+
+end
+
+  
+
+subgraph "C. Fonctionnalités"
+
+C1[Écran OLED Secondaire] <-->|I2C| B1;
+
+C2[Lecteur Carte MicroSD] <-->|SPI| B1;
+
+C3[Buzzer Piezo] <-->|GPIO| B1;
+
+end
+
+  
+
+subgraph "D. Communication"
+
+D1[Connecteur Magnétique 6-pin] <-->|SPI Esclave| B1;
+
+A2 <-->|USB Natif| B1;
+end
