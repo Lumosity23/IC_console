@@ -12,7 +12,7 @@ L'objectif est de fournir une plateforme matérielle et logicielle entièrement 
 *   **Totalement Open Source :** Schemas matériels (KiCad/EasyEDA), code du firmware, game engine, et outils de développement.
 *   **Documentation Exemplaire :** Chaque aspect du projet doit être documenté pour permettre à quiconque de construire, modifier ou développer pour la console.
 *   **Centré sur le Développeur :** L'écosystème logiciel (éditeur, simulateur) est aussi important que le matériel.
-*   **Modularité et Hackabilité :** La console et la cartouche sont conçuées pour être comprises et modifiées.
+*   **Modularité et Hackabilité :** La console et la cartouche sont conçues pour être comprises et modifiées.
 
 ---
 
@@ -51,23 +51,22 @@ Plus qu'un simple support de stockage, la cartouche est une mini-console autonom
 
 ---
 
-## 🛠️ Architecture Technique - Composants Spécifiques
+## 🛠️ Architecture Technique (Propositions)
 
-### Matériel (Hardware) - V1
+### Matériel (Hardware)
 
-| Composant                 | Console Hôte                                     | Cartouche Intelligente                             |
-| ------------------------- | ------------------------------------------------ | -------------------------------------------------- |
-| **Microcontrôleur (MCU)** | **ESP32-S3-WROOM-1**                             | **ESP32-C3-MINI-1** (ou similaire)                |
-| **Écran Principal**       | LCD IPS 2.4" ou 3.5" (SPI, 320x240)               | N/A                                                |
-| **Écran Secondaire**      | N/A                                              | OLED 1.3" (I2C, 128x64, SH1106 ou SSD1306)         |
-| **Stockage Jeux**         | N/A                                              | **Lecteur de carte microSD** (SPI)                 |
-| **Audio**                 | DAC I2S + Ampli (ex: MAX98357) + Haut-parleur    | Piezzo Buzzer (piloté par un GPIO/PWM)             |
-| **Batterie**              | 2x Cellules Li-Ion 18650 (en parallèle, 2P)      | 1x Cellule LiPo (~300-500mAh)                      |
-| **Gestion Alimentation**  | **IP5306** (Charge, Boost, Protection) *[à confirmer]* | **IP5306** (ou chargeur dédié type TP4056) *[à confirmer]* |
-| **Régulateur 3.3V**       | Module Buck-Boost (ex: Pololu) ou intégré à l'IP5306 | LDO ou petit Buck-Boost                            |
-| **Connecteur Principal**  | **Connecteur Magnétique "Pogo-Pin" 4-pins** (Mâle) | **Connecteur Magnétique "Pogo-Pin" 4-pins** (Femelle) |
-| **Connectique Externe**   | USB-C (Données + Charge)                         | USB-C (Données + Charge)                         |
-| **Communication**         | **SPI Maître** (via connecteur magnétique)       | **SPI Esclave** (via connecteur magnétique)        |
+| Composant                 | Console Hôte                                | Cartouche Intelligente                          |
+| ------------------------- | ------------------------------------------- | ----------------------------------------------- |
+| **Microcontrôleur (MCU)** | **ESP32-S3** ou **STM32H7** (puissant)      | **RP2040** ou **ESP32-C3** (efficace et compact)  |
+| **Écran**                 | LCD IPS 3.5" (SPI, 320x240)                 | OLED 0.96" ou 1.3" (I2C, 128x64)                 |
+| **Stockage**              | Flash interne du MCU (pour le firmware)     | **Lecteur de carte microSD** (pour les jeux)    |
+| **Audio**                 | DAC I2S + Ampli (ex: MAX98357) + Haut-parleur | Piezzo Buzzer (simple)                          |
+| **Batterie**              | LiPo ~2000-4000mAh                          | LiPo ~200-500mAh                                |
+| **Chargeur**              | Circuit de charge LiPo (ex: TP4056)         | Circuit de charge LiPo (ex: TP4056)             |
+| **Connecteur Principal**  | Port propriétaire 30-40 pins (mâle)         | Port propriétaire 30-40 pins (femelle)          |
+| **Connectique Externe**   | USB-C (Données + Charge)                    | USB-C (Données + Charge)                        |
+| **Communication**         | **SPI** (Maître)                            | **SPI** (Esclave)                               |
+
 ### Logiciel (Software)
 
 L'architecture logicielle sera basée sur **FreeRTOS** pour la gestion des tâches temps réel sur les deux unités.
@@ -168,20 +167,3 @@ Ce projet est ouvert à tous. Pour contribuer, veuillez consulter le fichier `CO
 Le projet sera publié sous une licence open source permissive.
 *   **Matériel :** CERN Open Hardware Licence v2 - Permissive (CERN-OHL-P).
 *   **Logiciel :** MIT License.
-
----
-
-## Hardware Schematics and PCB Layout
-
-Here are some schematics and PCB layout screenshots of the console.
-
-| Screenshot | Description |
-|---|---|
-| ![Schema de l'alimentation 3.3V et du sélecteur de source (Batterie / USB-C)](DOCS/images/screenshot/Screenshot%20from%202025-09-18%2018-38-11.png) | Schéma de l'alimentation 3.3V et du sélecteur de source (Batterie / USB-C). |
-| ![Schéma du circuit de charge (TC4056A)](DOCS/images/screenshot/Screenshot%20from%202025-09-18%2018-38-45.png) | Schéma du circuit de charge (TC4056A). |
-| ![Schéma des connecteurs (USB-C, Lecteur SD, PogoPin)](DOCS/images/screenshot/Screenshot%20from%202025-09-18%2018-38-58.png) | Schéma des connecteurs (USB-C, Lecteur SD, PogoPin). |
-| ![Schéma du microcontrôleur (ESP32-C3) et des composants associés](DOCS/images/screenshot/Screenshot%20from%202025-09-18%2018-39-18.png) | Schéma du microcontrôleur (ESP32-C3) et des composants associés. |
-| ![Vue du PCB - Couche de cuivre supérieure (Top layer)](DOCS/images/screenshot/Screenshot%20from%202025-09-18%2018-41-00.png) | Vue du PCB - Couche de cuivre supérieure (Top layer). |
-| ![Vue du PCB - Couche interne 1 (Inner layer 1)](DOCS/images/screenshot/Screenshot%20from%202025-09-18%2018-41-26.png) | Vue du PCB - Couche interne 1 (Inner layer 1). |
-| ![Vue du PCB - Couche interne 2 (Inner layer 2)](DOCS/images/screenshot/Screenshot%20from%202025-09-18%2018-41-41.png) | Vue du PCB - Couche interne 2 (Inner layer 2). |
-| ![Vue du PCB - Couche de cuivre inférieure (Bottom layer)](DOCS/images/screenshot/Screenshot%20from%202025-09-18%2018-41-50.png) | Vue du PCB - Couche de cuivre inférieure (Bottom layer). |
